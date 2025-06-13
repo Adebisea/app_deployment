@@ -2,6 +2,7 @@
   "name": "nodejs-18-eks-project",
   "version": "1.0.0",
   "description": "nodejs project",
+  "type": "module",
   "main": "app.js",
   "keywords": [
     "nodejs",
