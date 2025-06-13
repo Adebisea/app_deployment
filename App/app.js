@@ -10,8 +10,7 @@ const __dirname = dirname(__filename);
 const app = express();
 const router = express.Router();
 
-const static_path = __dirname + '/static/';
-const port = 3000;
+const static_path = path.join(__dirname ,'/static/')
 
 router.use(function (req,res,next) {
   console.log('/' + req.method);
