@@ -1,6 +1,6 @@
 import assert from "assert";
 import http from "http";
-import app from "../app.js";  // adjust path
+import app from "../app.js"; 
 
 let server;
 
@@ -13,7 +13,7 @@ after((done) => {
 });
 
 describe("GET /health", () => {
-  it("should return 200 OK", (done) => {
+  it("200 OK: Server is up", (done) => {
     http.get("http://localhost:3000/health", (res) => {
       assert.strictEqual(res.statusCode, 200);
       done();
