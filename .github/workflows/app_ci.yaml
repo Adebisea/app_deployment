@@ -12,6 +12,9 @@ jobs:
   test:
     name: tests and code quality checks
     runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: App
     steps:
       - name: checkout code from repo
         uses: actions/checkout@v4
@@ -22,7 +25,7 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: cd App && npm install
+        run: npm install
 
       - name: run linter
         run: npm run lint
