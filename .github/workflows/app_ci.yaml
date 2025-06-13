@@ -19,7 +19,7 @@ jobs:
       - name: setup node 18
         uses: actions/setup-node@v4
         with:
-          node-version: '18-slim'
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
@@ -31,3 +31,13 @@ jobs:
         run: npm test
 
 
+  build-and-push:
+    name: Build and push Docker image
+    runs-on: ubuntu-24.04
+    needs: test  # runs only if tests pass
+# Stages:
+
+# 
+# Deploy to staging automatically
+# Deploy to production with manual approval
+# Rollback capability
