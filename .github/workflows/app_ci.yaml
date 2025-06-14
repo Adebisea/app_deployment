@@ -5,8 +5,7 @@ on:
     branches:
       - main
   workflow_dispatch: 
-env:
-  REGISTRY: ghcr.io/${{ github.repository }}
+
 jobs:
 
   # Run tests and code quality checks
@@ -55,6 +54,11 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+
+# This sets the registry name to lowercase, very useful for cases with repo owner name having uppercase.
+    - name: Set registry to lowercase 
+      id: lowercase_owner
+      run: echo "REGISTRY=ghcr.io/${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
     - name: Build and push
       uses: docker/build-push-action@v5
