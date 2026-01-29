@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch: 
 
 jobs:
@@ -53,9 +56,9 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.TOKEN }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-# This sets the registry name to lowercase, very useful for cases with repo owner name having uppercase.
+     # This sets the registry name to lowercase, very useful for cases with repo owner name having uppercase.
     - name: Set registry to lowercase 
       id: lowercase_owner
       run: echo "REGISTRY=ghcr.io/${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
@@ -71,9 +74,56 @@ jobs:
            ${{ env.REGISTRY }}/sharks-app:latest
            ${{ env.REGISTRY }}/sharks-app:${{ github.sha }}
 
-# Stages:
+  # staging:
+  
+  #   name: Deploy to staging automatically
+  #   runs-on: ubuntu-24.04
+  #   needs: build-and-push  # runs only if build-and-push pass
+  #   steps:
 
-# # 
-# # Deploy to staging automatically
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
+  #     with:
+  #       repository: Adebisea/eks_setup
+  #       token: ${{ secrets.TOKEN }}
+  #       sparse-checkout: k8s_manifest
+  #       path: eks_setup  # set the path to clone into
+
+  #   - name: Install kustomize
+  #     run: |
+  #       curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+  #       sudo mv kustomize /usr/local/bin/
+
+  #   - name: Update image tag for staging overlay using Kustomize
+  #     run: |
+  #       cd eks_setup/k8s_manifest/apps/overlays/staging
+  #       kustomize edit set image ${{ env.REGISTRY }}/sharks-app=${{ env.REGISTRY }}/sharks-app:${{ github.sha }}
+
+  #   - name: commit the changes to eks_setup repo
+  #     uses: EndBug/add-and-commit@v9
+  #     with:
+  #       cwd: ./eks_setup
+  #       message: "Update staging deployment image to ${{ github.sha }}"
+  #       add: 'k8s_manifest/apps/overlays/staging/kustomization.yaml'
+  #       new_branch: update-image-${{ github.sha }}  # this commits to this branch in the eks_setup repo
+  #       branch: ${{ github.head_ref }} 
+  #       author_name: github-actions[bot]
+  #       author_email: github-actions[bot]@users.noreply.github.com
+
+  #   - name: Create Pull Request to merge to main in the eks_setup repo
+  #     uses: peter-evans/create-pull-request@v7
+  #     path: ./eks_setup
+  #     commit-message: "Update image to ${{ github.sha }}"
+  #     branch: update-image-${{ github.sha }}
+  #     title: "Update image to ${{ github.sha }}"
+
+  #   - name: Auto-merge the eks_setup PR
+  #     uses: pascalgn/automerge-action@v0.16.3
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.TOKEN }}
+  #     with:
+  #       mergeMethod: merge  
+
+# Stages:
 # # Deploy to production with manual approval
 # # Rollback capability
